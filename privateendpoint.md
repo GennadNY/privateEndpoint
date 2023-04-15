@@ -6,7 +6,7 @@ ms.subservice: flexible-server
 ms.topic: conceptual
 ms.author: gennadNY
 author: gennadNY
-ms.date:04/15/2023
+ms.date: 06/07/2022
 ---
 # Azure Database for PostgreSQL Flexible Server Networking with Private Link - Preview
 

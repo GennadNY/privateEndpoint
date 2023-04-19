@@ -23,7 +23,7 @@ For a list to PaaS services that support Private Link functionality, review the 
 
 The same public service instance can be referenced by multiple private endpoints in different VNets/subnets, even if they belong to different users/subscriptions (including within differing Azure Active Directory (AAD) tenants) or if they have overlapping address spaces.
 
-:::image type="content" source="./media/azure-private-link.png" alt-text="Diagram that shows how Azure Private Link works with Private Endpoints.":::
+<image type="content" src="./media/azure-private-link.png" alt-text="Diagram that shows how Azure Private Link works with Private Endpoints." />
 
 
 ## Key Benefits of Azure Private Link
@@ -43,6 +43,36 @@ Azure Private Link provides the following benefits:
 When using a private endpoint, you need to connect to the same Azure service but use the private endpoint IP address. The intimate endpoint connection requires separate DNS settings to resolve the private IP address to the resource name.
 Private DNS zones provide domain name resolution within a virtual network without a custom DNS solution. You link the private DNS zones to each virtual network to provide DNS services to that network.
 
-Private DNS zones provide separate DNS zone names for each Azure service. For example, if you configured a private DNS zone for the storage account blob service in the previous image, the DNS zones name is privatelink.blob.core.windows.net. Check out the Microsoft documentation here to see more of the private DNS zone names for all Azure services.
+Private DNS zones provide separate DNS zone names for each Azure service. For example, if you configured a private DNS zone for the storage account blob service in the previous image, the DNS zones name is **privatelink.blob.core.windows.net**. Check out the Microsoft documentation here to see more of the private DNS zone names for all Azure services.
+> [!NOTE]
+>Private endpoint private DNS zone configurations will only automatically generate if you use the recommended naming scheme: **privatelink.postgres.database.azure.com**
+
+## Private Link and Network Security Groups
+
+By default, network policies are disabled for a subnet in a virtual network. To utilize network policies like User-Defined Routes and Network Security Groups support, network policy support must be enabled for the subnet. This setting is only applicable to private endpoints within the subnet. This setting affects all private endpoints within the subnet. For other resources in the subnet, access is controlled based on security rules in the network security group.
+
+Network policies can be enabled either for Network Security Groups only, for User-Defined Routes only, or for both. For more you can see [Azure docs](https://learn.microsoft.com/azure/private-link/disable-private-endpoint-network-policy?tabs=network-policy-portal)
+
+## Private Link combined with firewall rules
+
+The following situations and outcomes are possible when you use Private Link in combination with firewall rules:
+
+* If you don't configure any firewall rules, then by default, no traffic will be able to access the Azure Database for PostgreSQL Single server.
+
+* If you configure public traffic or a service endpoint and you create private endpoints, then different types of incoming traffic are authorized by the corresponding type of firewall rule.
+
+* If you don't configure any public traffic or service endpoint and you create private endpoints, then the Azure Database for PostgreSQL Single server is accessible only through the private endpoints. If you don't configure public traffic or a service endpoint, after all approved private endpoints are rejected or deleted, no traffic will be able to access the Azure Database for PostgreSQL Single server. 
 
 
+## Configure Private Link for Azure Database for PostgreSQL - Flexible Server
+
+Private endpoints are required to enable Private Link. This can be done using the following steps:
+
+### Prerequisites
+ * An Azure Database for PostgreSQL - Flexible Server and databases
+
+### Azure Cloud Shell
+
+Azure hosts Azure Cloud Shell, an interactive shell environment that you can use through your browser. You can use either Bash or PowerShell with Cloud Shell to work with Azure services. You can use the Cloud Shell preinstalled commands to run the code in this article, without having to install anything on your local environment.
+
+To start Azure Cloud Shell:

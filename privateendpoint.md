@@ -123,3 +123,5 @@ az network vnet subnet update \
 --vnet-name myVirtualNetwork \
 --disable-private-endpoint-network-policies true
 ```
+
+### Create an Azure Database for PostgreSQL - Flexible server

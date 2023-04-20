@@ -128,11 +128,75 @@ az network vnet subnet update \
 
 Create a Azure Database for PostgreSQL with the [az postgres flexible-server create](https://learn.microsoft.com/en-us/cli/azure/postgres/flexible-server?view=azure-cli-latest#az-postgres-flexible-server-create) command. Remember that the name of your PostgreSQL Server must be unique across Azure, so replace the placeholder value with your own unique values that you used above:
 ```azurecli
-az postgres server create \
+az postgres flexible-server create \
 --name mydemoserver \
 --resource-group myresourcegroup \
 --location westeurope \
 --admin-user mylogin \
 --admin-password <server_admin_password> \
---sku-name GP_Gen5_2
+--sku-name Standard_B1ms \
+--tier Burstable \
+--version 13
 ```
+
+### Create the Private Endpoint
+
+Create a private endpoint for the PostgreSQL Flexible server in your Virtual Network:
+```azurecli
+az network private-endpoint create \  
+    --name myPrivateEndpoint \  
+    --resource-group myResourceGroup \  
+    --vnet-name myVirtualNetwork  \  
+    --subnet mySubnet \  
+    --storage-size 128 \   
+    --group-id postgresqlServer \  
+    --high-availability Enabled \
+    --zone 1 \
+    --standby-zone 3
+```
+
+### Configure the Private DNS Zone
+
+Create a Private DNS Zone for PostgreSQL server domain and create an association link with the Virtual Network. 
+```azurecli
+az network private-dns zone create --resource-group myResourceGroup \ 
+   --name  "privatelink.postgres.database.azure.com" 
+
+az network private-dns link vnet create --resource-group myResourceGroup \ 
+   --zone-name  "privatelink.postgres.database.azure.com"\ 
+   --name MyDNSLink \ 
+   --virtual-network myVirtualNetwork \ 
+   --registration-enabled false
+
+#Query for the network interface ID  
+
+networkInterfaceId=$(az network private-endpoint show --name myPrivateEndpoint --resource-group myResourceGroup --query 'networkInterfaces[0].id' -o tsv)
+
+
+az resource show --ids $networkInterfaceId --api-version 2019-04-01 -o json
+# Copy the content for privateIPAddress and FQDN matching the Azure database for PostgreSQL name
+
+#Create DNS records 
+
+az network private-dns record-set a create --name myserver --zone-name privatelink.postgres.database.azure.com --resource-group myResourceGroup  
+az network private-dns record-set a add-record --record-set-name myserver --zone-name privatelink.postgres.database.azure.com --resource-group myResourceGroup -a <Private IP Address>
+```
+
+> [!NOTE]
+> The FQDN in the customer DNS setting does not resolve to the private IP configured. You will have to setup a DNS zone for the configured FQDN as shown [here](https://learn.microsoft.com/en-us/azure/dns/dns-operations-recordsets-portal).
+
+> [!NOTE]
+> In some cases the Azure Database for PostgreSQL and the VNet-subnet are in different subscriptions. In these cases you must ensure the following configurations:
+* Make sure that both the subscription has the Microsoft.DBforPostgreSQL resource provider registered. For more information, refer to > resource providers.
+
+### Create the VM Client
+
+Create a VM with [az vm create](https://learn.microsoft.com/cli/azure/vm?view=azure-cli-latest#az-vm-create). When prompted, provide a password to be used as the sign-in credentials for the VM. This example creates a VM named *myVm*:
+```azurecli
+az vm create \
+  --resource-group myResourceGroup \
+  --name myVm \
+  --image Win2019Datacenter
+```
+
+### Connect to VM from Internet

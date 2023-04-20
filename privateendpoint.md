@@ -125,3 +125,14 @@ az network vnet subnet update \
 ```
 
 ### Create an Azure Database for PostgreSQL - Flexible server
+
+Create a Azure Database for PostgreSQL with the [az postgres flexible-server create](https://learn.microsoft.com/en-us/cli/azure/postgres/flexible-server?view=azure-cli-latest#az-postgres-flexible-server-create) command. Remember that the name of your PostgreSQL Server must be unique across Azure, so replace the placeholder value with your own unique values that you used above:
+```azurecli
+az postgres server create \
+--name mydemoserver \
+--resource-group myresourcegroup \
+--location westeurope \
+--admin-user mylogin \
+--admin-password <server_admin_password> \
+--sku-name GP_Gen5_2
+```

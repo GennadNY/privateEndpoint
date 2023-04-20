@@ -93,3 +93,13 @@ To use Azure Cloud Shell:
 
 4. Select **Enter** to run the code or command.
 
+If you decide to install and use Azure CLI locally instead, this quickstart requires you to use Azure CLI version 2.0.28 or later. To find your installed version, run *az --version.*
+
+See [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) for install or upgrade info.
+
+### Create Resource Group
+
+Before you can create any resource, you have to create a resource group to host the Virtual Network. Create a resource group with [*az group create*](https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create). This example creates a resource group named myResourceGroup in the westeurope location:
+```azurecli-interactive
+az group create --name myResourceGroup --location westeurope
+```

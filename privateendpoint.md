@@ -99,7 +99,27 @@ See [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azur
 
 ### Create Resource Group
 
-Before you can create any resource, you have to create a resource group to host the Virtual Network. Create a resource group with [*az group create*](https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create). This example creates a resource group named myResourceGroup in the westeurope location:
+Before you can create any resource, you have to create a resource group to host the Virtual Network. Create a resource group with [*az group create*](https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create). This example creates a resource group named *myResourceGroup* in the *westeurope* location:
 ```azurecli-interactive
 az group create --name myResourceGroup --location westeurope
+```
+
+### Create Virtual Network
+
+Create a Virtual Network with [*az network vnet create*](https://learn.microsoft.com/en-us/cli/azure/network/vnet?view=azure-cli-latest#az-network-vnet-create). This example creates a default Virtual Network named *myVirtualNetwork* with one subnet named *mySubnet*:
+```azurecli
+az network vnet create \
+--name myVirtualNetwork \
+--resource-group myResourceGroup \
+--subnet-name mySubnet
+```
+### Disable subnet private endpoint policies
+
+Azure deploys resources to a subnet within a virtual network, so you need to create or update the subnet to disable private endpoint [network policies](https://learn.microsoft.com/en-us/azure/private-link/disable-private-endpoint-network-policy?tabs=network-policy-portal). Update a subnet configuration named mySubnet with [*az network vnet subnet update*](https://learn.microsoft.com/en-us/cli/azure/network/vnet/subnet?view=azure-cli-latest#az-network-vnet-subnet-update):
+```azurecli
+az network vnet subnet update \
+--name mySubnet \
+--resource-group myResourceGroup \
+--vnet-name myVirtualNetwork \
+--disable-private-endpoint-network-policies true
 ```

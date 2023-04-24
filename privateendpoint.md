@@ -200,3 +200,23 @@ az vm create \
 ```
 
 ### Connect to VM from Internet
+
+Connect to the VM myVm from the internet as follows:
+
+1. In the portal's search bar, enter myVm.
+
+2. Select the Connect button. After selecting the Connect button, Connect to virtual machine opens.
+
+3. Select Download RDP File. Azure creates a Remote Desktop Protocol (.rdp) file and downloads it to your computer.
+
+4. Open the downloaded.rdp file.
+
+    - If prompted, select Connect.
+
+    - Enter the username and password you specified when creating the VM.
+5. Select OK.
+
+6. You may receive a certificate warning during the sign-in process. If you receive a certificate warning, select Yes or Continue.
+
+7. Once the VM desktop appears, minimize it to go back to your local desktop.
+

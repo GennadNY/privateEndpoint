@@ -71,152 +71,72 @@ Private endpoints are required to enable Private Link. This can be done using th
 ### Prerequisites
  * An Azure Database for PostgreSQL - Flexible Server and databases
 
-### Azure Cloud Shell
+### Sign in Azure
 
-Azure hosts Azure Cloud Shell, an interactive shell environment that you can use through your browser. You can use either Bash or PowerShell with Cloud Shell to work with Azure services. You can use the Cloud Shell preinstalled commands to run the code in this article, without having to install anything on your local environment.
+Sign in to the [Azure portal](https://portal.azure.com).
 
-To start Azure Cloud Shell:
+### Create an Azure VM
 
-| Option | Example/Link |
-|-----------------------------------------------|---|
-| Select **Try It** in the upper-right corner of a code or command block. Selecting **Try It** doesn't automatically copy the code or command to Cloud Shell. | ![Screenshot that shows an example of Try It for Azure Cloud Shell.](./media/hdi-azure-cli-try-it.png) |
-| Go to [https://shell.azure.com](https://shell.azure.com), or select the **Launch Cloud Shell** button to open Cloud Shell in your browser. | [![Screenshot that shows how to launch Cloud Shell in a new window.](media/hdi-launch-cloud-shell.png)](https://shell.azure.com) |
-| Select the **Cloud Shell** button on the menu bar at the upper right in the [Azure portal](https://portal.azure.com). | ![Screenshot that shows the Cloud Shell button in the Azure portal](./media/hdi-cloud-shell-menu.png) |
+In this section, you will create virtual network and the subnet to host the VM that is used to access your Private Link resource (a PostgreSQL Flexible server in Azure).
 
-To use Azure Cloud Shell:
+#### Create Virtual Network
 
-1. Start Cloud Shell.
+In this section, you will create a Virtual Network and the subnet to host the VM that is used to access your Private Link resource.
+1. On the upper-left side of the screen, select **Create a resource** > **Networking** > **Virtual network**.
+2. In **Create virtual network**, enter or select this information:
 
-2. Select the **Copy** button on a code block (or command block) to copy the code or command.
+| **Setting** | **Value**|
+|---------|------|
+|Name     |  Enter *MyVirtualNetwork*    |
+|Address space| Enter *10.1.0.0/16*      |
+|Subscription | Select your subscription|
+|Resource group | Select **Create new**, enter *myResourceGroup*, then select **OK**.|
+|Location| Select **West Europe**.|
+|Subnet - Name| Enter *mySubnet*|
+|Subnet - Address range| Enter *10.1.0.0/24*|
 
-3. Paste the code or command into the Cloud Shell session by selecting **Ctrl**+**Shift**+**V** on Windows and Linux, or by selecting **Cmd**+**Shift**+**V** on macOS.
+3. Leave the rest as default and select *Create*.
 
-4. Select **Enter** to run the code or command.
+#### Create Virtual Machine
 
-If you decide to install and use Azure CLI locally instead, this quickstart requires you to use Azure CLI version 2.0.28 or later. To find your installed version, run *az --version.*
+1. On the upper-left side of the screen in the Azure portal, select **Create a resource** > **Compute** > **Virtual Machine**.
+2. In **Create a virtual machine - Basics**, enter or select this information:
 
-See [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) for install or upgrade info.
+| **Setting** | **Value**|
+|---------|------|
+|PROJECT DETAILS 
+|Subscription| Select your subscription|
+|Resource group | Select myResourceGroup. You created this in the previous section|
+|INSTANCE DETAILS|
+|Virtual machine name| Enter *myVm* |
+|Region | Select **West Europe**|
+|Availability options| Leave the default **No infrastructure redundancy required**|
+|Image| Select **Windows Server 2019 Datacenter**|
+|Size| Leave the default **Standard DS1 v2** |
+|ADMINISTRATOR ACCOUNT|
+|Username| Enter a username of your choosing|
+|Pasword| Enter a password of your choosing. The password must be at least 12 characters long and meet the [defined complexity requirements](https://learn.microsoft.com/en-us/azure/virtual-machines/windows/faq?toc=%2Fazure%2Fvirtual-network%2Ftoc.json#what-are-the-password-requirements-when-creating-a-vm-)| 
+|Confirm Password| Reenter password|
+|INBOUND PORT RULES|
+|Public inbound port| Leave the default None|
+| SAVE MONEY|
+|Already have a Windows license?| Leave the default **No**.
 
-### Create Resource Group
+3. Select **Next: Disks**.
+4. In **Create a virtual machine - Disks**, leave the defaults and select **Next: Networking**.
+5. In **Create a virtual machine - Networking**, select this information:
 
-Before you can create any resource, you have to create a resource group to host the Virtual Network. Create a resource group with [*az group create*](https://learn.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-create). This example creates a resource group named *myResourceGroup* in the *westeurope* location:
-```azurecli-interactive
-az group create --name myResourceGroup --location westeurope
-```
+| **Setting** | **Value**|
+|---------|------|
+|Virtual network | Leave the default *MyVirtualNetwork*|
+|Address space | Leave the default **10.1.0.0/24** |
+|Subnet| Leave the default **mySubnet (10.1.0.0/24)** |
+|Public IP| Leave the default **(new) myVm-ip** |
+|Public inbound ports| Select **Allow selected ports** |
+|Select inbound ports| Select **HTTP** and **RDP**| 
+6. Select **Review + create**. You're taken to the **Review + create** page where Azure validates your configuration.
+7. When you see the **Validation passed** message, select **Create**.
 
-### Create Virtual Network
-
-Create a Virtual Network with [*az network vnet create*](https://learn.microsoft.com/en-us/cli/azure/network/vnet?view=azure-cli-latest#az-network-vnet-create). This example creates a default Virtual Network named *myVirtualNetwork* with one subnet named *mySubnet*:
-```azurecli
-az network vnet create \
---name myVirtualNetwork \
---resource-group myResourceGroup \
---subnet-name mySubnet
-```
-### Disable subnet private endpoint policies
-
-Azure deploys resources to a subnet within a virtual network, so you need to create or update the subnet to disable private endpoint [network policies](https://learn.microsoft.com/en-us/azure/private-link/disable-private-endpoint-network-policy?tabs=network-policy-portal). Update a subnet configuration named mySubnet with [*az network vnet subnet update*](https://learn.microsoft.com/en-us/cli/azure/network/vnet/subnet?view=azure-cli-latest#az-network-vnet-subnet-update):
-```azurecli
-az network vnet subnet update \
---name mySubnet \
---resource-group myResourceGroup \
---vnet-name myVirtualNetwork \
---disable-private-endpoint-network-policies true
-```
-
-### Create an Azure Database for PostgreSQL - Flexible server
-
-Create a Azure Database for PostgreSQL with the [az postgres flexible-server create](https://learn.microsoft.com/en-us/cli/azure/postgres/flexible-server?view=azure-cli-latest#az-postgres-flexible-server-create) command. Remember that the name of your PostgreSQL Server must be unique across Azure, so replace the placeholder value with your own unique values that you used above:
-```azurecli
-az postgres flexible-server create \
---name mydemoserver \
---resource-group myresourcegroup \
---location westeurope \
---admin-user mylogin \
---admin-password <server_admin_password> \
---sku-name Standard_B1ms \
---tier Burstable \
---version 13
-```
-
-### Create the Private Endpoint
-
-Create a private endpoint for the PostgreSQL Flexible server in your Virtual Network:
-```azurecli
-az network private-endpoint create \  
-    --name myPrivateEndpoint \  
-    --resource-group myResourceGroup \  
-    --vnet-name myVirtualNetwork  \  
-    --subnet mySubnet \  
-    --storage-size 128 \   
-    --group-id postgresqlServer \  
-    --high-availability Enabled \
-    --zone 1 \
-    --standby-zone 3
-```
-
-### Configure the Private DNS Zone
-
-Create a Private DNS Zone for PostgreSQL server domain and create an association link with the Virtual Network. 
-```azurecli
-az network private-dns zone create --resource-group myResourceGroup \ 
-   --name  "privatelink.postgres.database.azure.com" 
-
-az network private-dns link vnet create --resource-group myResourceGroup \ 
-   --zone-name  "privatelink.postgres.database.azure.com"\ 
-   --name MyDNSLink \ 
-   --virtual-network myVirtualNetwork \ 
-   --registration-enabled false
-
-#Query for the network interface ID  
-
-networkInterfaceId=$(az network private-endpoint show --name myPrivateEndpoint --resource-group myResourceGroup --query 'networkInterfaces[0].id' -o tsv)
-
-
-az resource show --ids $networkInterfaceId --api-version 2019-04-01 -o json
-# Copy the content for privateIPAddress and FQDN matching the Azure database for PostgreSQL name
-
-#Create DNS records 
-
-az network private-dns record-set a create --name myserver --zone-name privatelink.postgres.database.azure.com --resource-group myResourceGroup  
-az network private-dns record-set a add-record --record-set-name myserver --zone-name privatelink.postgres.database.azure.com --resource-group myResourceGroup -a <Private IP Address>
-```
-
-> [!NOTE]
-> The FQDN in the customer DNS setting does not resolve to the private IP configured. You will have to setup a DNS zone for the configured FQDN as shown [here](https://learn.microsoft.com/en-us/azure/dns/dns-operations-recordsets-portal).
-
-> [!NOTE]
-> In some cases the Azure Database for PostgreSQL and the VNet-subnet are in different subscriptions. In these cases you must ensure the following configurations:
-* Make sure that both the subscription has the Microsoft.DBforPostgreSQL resource provider registered. For more information, refer to > resource providers.
-
-### Create the VM Client
-
-Create a VM with [az vm create](https://learn.microsoft.com/cli/azure/vm?view=azure-cli-latest#az-vm-create). When prompted, provide a password to be used as the sign-in credentials for the VM. This example creates a VM named *myVm*:
-```azurecli
-az vm create \
-  --resource-group myResourceGroup \
-  --name myVm \
-  --image Win2019Datacenter
-```
-
-### Connect to VM from Internet
-
-Connect to the VM myVm from the internet as follows:
-
-1. In the portal's search bar, enter myVm.
-
-2. Select the Connect button. After selecting the Connect button, Connect to virtual machine opens.
-
-3. Select Download RDP File. Azure creates a Remote Desktop Protocol (.rdp) file and downloads it to your computer.
-
-4. Open the downloaded.rdp file.
-
-    - If prompted, select Connect.
-
-    - Enter the username and password you specified when creating the VM.
-5. Select OK.
-
-6. You may receive a certificate warning during the sign-in process. If you receive a certificate warning, select Yes or Continue.
-
-7. Once the VM desktop appears, minimize it to go back to your local desktop.
-
+>[!NOTE]
+>In some cases the Azure Database for PostgreSQL and the VNet-subnet are in different subscriptions. In these cases you must ensure the following configurations:
+ - Make sure that both the subscription has the **Microsoft.DBforPostgreSQL** resource provider registered. For more information refer [resource-manager-registration](https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types)

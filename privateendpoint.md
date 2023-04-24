@@ -64,7 +64,7 @@ The following situations and outcomes are possible when you use Private Link in 
 * If you don't configure any public traffic or service endpoint and you create private endpoints, then the Azure Database for PostgreSQL Single server is accessible only through the private endpoints. If you don't configure public traffic or a service endpoint, after all approved private endpoints are rejected or deleted, no traffic will be able to access the Azure Database for PostgreSQL Single server. 
 
 
-## Configure Private Link for Azure Database for PostgreSQL - Flexible Server
+## Configure Private Link for Azure Database for PostgreSQL - Flexible Server - Preview via Portal
 
 Private endpoints are required to enable Private Link. This can be done using the following steps:
 

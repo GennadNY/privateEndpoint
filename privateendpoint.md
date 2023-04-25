@@ -137,9 +137,6 @@ In this section, you will create a Virtual Network and the subnet to host the VM
 6. Select **Review + create**. You're taken to the **Review + create** page where Azure validates your configuration.
 7. When you see the **Validation passed** message, select **Create**.
 
-> [!NOTE]
-> In some cases the Azure Database for PostgreSQL and the VNet-subnet are in different subscriptions. In these cases you must ensure the following configurations:
- > - Make sure that both the subscription has the **Microsoft.DBforPostgreSQL** resource provider registered. For more information refer [resource-manager-registration](https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types)
 
 #### Create an Azure Database for PostgreSQL - Flexible Server
 In this section, you will create an Azure Database for PostgreSQL - Flexible Server in Azure.
@@ -170,3 +167,52 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 7. When you see the Validation passed message, select **Create**.
 
 #### Connect to a VM using Remote Desktop (RDP)
+
+After you've created Azure virtual machine called *myVm*, connect to it from the internet as follows:
+
+1. In the portal's search bar, enter myVm.
+
+2. Select the Connect button. After selecting the Connect button, Connect to virtual machine opens.
+
+3. Select Download RDP File. Azure creates a Remote Desktop Protocol (.rdp) file and downloads it to your computer.
+
+4. Open the downloaded.rdp file.
+
+    - If prompted, select Connect.
+
+    - Enter the username and password you specified when creating the VM.
+5. Select OK.
+6. You may receive a certificate warning during the sign-in process. If you receive a certificate warning, select Yes or Continue.
+7. Once the VM desktop appears, minimize it to go back to your local desktop.
+
+#### Access the PostgreSQL server privately from the VM
+
+1. In the Remote Desktop of myVM, open PowerShell.
+
+2. Enter nslookup mydemopostgresserver.privatelink.postgres.database.azure.com.
+
+3. You'll receive a message similar to this:
+
+  ```azurepowershell
+  Server:  UnKnown
+Address:  168.63.129.16
+Non-authoritative answer:
+Name:    mydemopostgresserver.privatelink.postgres.database.azure.com
+Address:  10.1.3.4
+```
+
+4. Test the private link connection for the PostgreSQL server using any available client. In the example below I have used Azure Data studio to do the operation
+5. In New connection, enter or select this information:
+
+| **Setting** | **Value**|
+|---------|------|
+|Server type |Select PostgreSQL|
+|Server name |Select mydemopostgresserver.privatelink.postgres.database.azure.com|
+|User name |Enter username as username@servername which is provided during the PostgreSQL server creation.|
+|Password |Enter a password provided during the PostgreSQL server creation|
+|SSL|Select Required|
+6. Select Connect.
+7. Browse databases from left menu
+8. (Optionally) Create or query information from the postgreSQL server
+9. Close the remote desktop connection to myVm
+    

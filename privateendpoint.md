@@ -64,7 +64,7 @@ The following situations and outcomes are possible when you use Private Link in 
 * If you don't configure any public traffic or service endpoint and you create private endpoints, then the Azure Database for PostgreSQL Single server is accessible only through the private endpoints. If you don't configure public traffic or a service endpoint, after all approved private endpoints are rejected or deleted, no traffic will be able to access the Azure Database for PostgreSQL Single server. 
 
 
-## Configure Private Link for Azure Database for PostgreSQL - Flexible Server - Preview via Portal
+## Configure Private Link for Azure Database for PostgreSQL - Flexible Server (Preview) via Portal
 
 Private endpoints are required to enable Private Link. This can be done using the following steps:
 
@@ -137,6 +137,36 @@ In this section, you will create a Virtual Network and the subnet to host the VM
 6. Select **Review + create**. You're taken to the **Review + create** page where Azure validates your configuration.
 7. When you see the **Validation passed** message, select **Create**.
 
->[!NOTE]
->In some cases the Azure Database for PostgreSQL and the VNet-subnet are in different subscriptions. In these cases you must ensure the following configurations:
- - Make sure that both the subscription has the **Microsoft.DBforPostgreSQL** resource provider registered. For more information refer [resource-manager-registration](https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types)
+> [!NOTE]
+> In some cases the Azure Database for PostgreSQL and the VNet-subnet are in different subscriptions. In these cases you must ensure the following configurations:
+ > - Make sure that both the subscription has the **Microsoft.DBforPostgreSQL** resource provider registered. For more information refer [resource-manager-registration](https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types)
+
+#### Create an Azure Database for PostgreSQL - Flexible Server
+In this section, you will create an Azure Database for PostgreSQL - Flexible Server in Azure.
+
+To create an Azure Database for PostgreSQL server, take the following steps:
+
+1. Select Create a resource (+) in the upper-left corner of the portal.
+
+2. Select Databases > Azure Database for PostgreSQL.
+
+3. Select the Flexible server deployment option.
+
+4. Fill out the Basics form with the following information
+
+| **Setting** | **Value**|
+|---------|------|
+|Subscription| Select your subscription|
+|Resource group| Select **myResourceGroup**. You created this in the previous section|
+|Server name| Enter *myserver*. If this name is taken, create a unique name|
+|Admin username |Enter an administrator name of your choosing|
+|Password|Enter a password of your choosing. The password must be at least 8 characters long and meet the defined requirements|
+|Location|Select an Azure region where you want to want your PostgreSQL Server to reside|
+|Version|Select the database version of the PostgreSQL server that is required|
+|Compute + Storage|elect the pricing tier that is needed for the server based on the workload|
+
+5. Select **OK**.
+6. Select **Review + create**. You're taken to the **Review + create** page where Azure validates your configuration.
+7. When you see the Validation passed message, select **Create**.
+
+#### Connect to a VM using Remote Desktop (RDP)

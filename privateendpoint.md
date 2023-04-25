@@ -170,15 +170,15 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 
 After you've created Azure virtual machine called *myVm*, connect to it from the internet as follows:
 
-1. In the portal's search bar, enter myVm.
+1. In the portal's search bar, enter *myVm*.
 
-2. Select the Connect button. After selecting the Connect button, Connect to virtual machine opens.
+2. Select the **Connect** button. After selecting the Connect button, Connect to virtual machine opens.
 
 3. Select Download RDP File. Azure creates a Remote Desktop Protocol (.rdp) file and downloads it to your computer.
 
 4. Open the downloaded.rdp file.
 
-    - If prompted, select Connect.
+    - If prompted, select **Connect**.
 
     - Enter the username and password you specified when creating the VM.
 5. Select OK.
@@ -187,9 +187,9 @@ After you've created Azure virtual machine called *myVm*, connect to it from the
 
 #### Access the PostgreSQL server privately from the VM
 
-1. In the Remote Desktop of myVM, open PowerShell.
+1. In the Remote Desktop of *myVM*, open PowerShell.
 
-2. Enter nslookup mydemopostgresserver.privatelink.postgres.database.azure.com.
+2. Enter *nslookup mydemopostgresserver.privatelink.postgres.database.azure.com*.
 
 3. You'll receive a message similar to this:
 
@@ -201,7 +201,8 @@ Name:    mydemopostgresserver.privatelink.postgres.database.azure.com
 Address:  10.1.3.4
 ```
 
-4. Test the private link connection for the PostgreSQL server using any available client. In the example below I have used Azure Data studio to do the operation
+4. Test the private link connection for the PostgreSQL server using any available client. In the example below I have used [Azure Data studio](https://learn.microsoft.com/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver16&tabs=redhat-install%2Credhat-uninstall) to do the operation.
+
 5. In New connection, enter or select this information:
 
 | **Setting** | **Value**|
@@ -211,8 +212,7 @@ Address:  10.1.3.4
 |User name |Enter username as username@servername which is provided during the PostgreSQL server creation.|
 |Password |Enter a password provided during the PostgreSQL server creation|
 |SSL|Select Required|
-6. Select Connect.
+6. Select **Connect**.
 7. Browse databases from left menu
 8. (Optionally) Create or query information from the postgreSQL server
 9. Close the remote desktop connection to myVm
-    

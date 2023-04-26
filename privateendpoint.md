@@ -104,7 +104,7 @@ In this section, you will create a Virtual Network and the subnet to host the VM
 
 | **Setting** | **Value**|
 |---------|------|
-|PROJECT DETAILS 
+|PROJECT DETAILS |
 |Subscription| Select your subscription|
 |Resource group | Select myResourceGroup. You created this in the previous section|
 |INSTANCE DETAILS|
@@ -162,9 +162,38 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 |Version|Select the database version of the PostgreSQL server that is required|
 |Compute + Storage|elect the pricing tier that is needed for the server based on the workload|
 
-5. Select **OK**.
-6. Select **Review + create**. You're taken to the **Review + create** page where Azure validates your configuration.
-7. When you see the Validation passed message, select **Create**.
+5. Select **Next:Networking**
+
+<image type="content" src="./media/server-create-summary.png" alt-text="Diagram that shows how Azure Private Link works with Private Endpoints." />
+
+6. Keep **"Public Access"** checkbox checked as Connectivity method
+7. Click **"Add Private Endpoint"** in Private Endpoint section
+
+<image type="content" src="./media/private-endpoint-summary.png" alt-text="Diagram that shows how Azure Private Link works with Private Endpoints." />
+
+8. In Create Private Endpoint Screen enter following:
+
+| **Setting** | **Value**|
+|---------|------|
+|Subscription| Select your subscription|
+|Resource group| Select **myResourceGroup**. You created this in the previous section|
+|Location|Select an Azure region where you want to want your Private Endpoint to reside|
+|Name|Name of Private Endpoint|
+|Target sub-resource|postgresqlServer|
+|NETWORKING|
+|Virtual Network|  Enter *MyVirtualNetwork* |
+|Subnet|Enter *mySubnet*|
+|PRIVATE DNS INTEGRATION]
+|Integrate with Private DNS Zone| Yes|
+|Private DNS Zone| Pick (New)privatelink.postgresql.database.azure.com|
+
+
+9. Select **OK**.
+10. Select **Review + create**. You're taken to the **Review + create** page where Azure validates your configuration.
+11. Networking section of the **Review + Create** page will list your Private Endpoint information
+<image type="content" src="./media/create-summary-page.png" alt-text="Review page showing networking section" />
+
+12. When you see the Validation passed message, select **Create**.
 
 #### Connect to a VM using Remote Desktop (RDP)
 
@@ -216,3 +245,4 @@ Address:  10.1.3.4
 7. Browse databases from left menu
 8. (Optionally) Create or query information from the postgreSQL server
 9. Close the remote desktop connection to myVm
+

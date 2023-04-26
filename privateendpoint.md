@@ -195,7 +195,7 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 
 12. When you see the Validation passed message, select **Create**.
 
-#### Connect to a VM using Remote Desktop (RDP)
+### Connect to a VM using Remote Desktop (RDP)
 
 After you've created Azure virtual machine called *myVm*, connect to it from the internet as follows:
 
@@ -214,7 +214,7 @@ After you've created Azure virtual machine called *myVm*, connect to it from the
 6. You may receive a certificate warning during the sign-in process. If you receive a certificate warning, select Yes or Continue.
 7. Once the VM desktop appears, minimize it to go back to your local desktop.
 
-#### Access the PostgreSQL server privately from the VM
+### Access the PostgreSQL server privately from the VM
 
 1. In the Remote Desktop of *myVM*, open PowerShell.
 

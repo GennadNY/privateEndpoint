@@ -162,10 +162,9 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 |Version|Select the database version of the PostgreSQL server that is required|
 |Compute + Storage|Select the pricing tier that is needed for the server based on the workload|
 
-5. Select **Next:Networking**
-
 <image type="content" src="./media/server-create-summary.png" alt-text="Diagram that shows how Azure Private Link works with Private Endpoints." />
 
+5. Select **Next:Networking**
 6. Keep **"Public Access"** checkbox checked as Connectivity method
 7. Click **"Add Private Endpoint"** in Private Endpoint section
 

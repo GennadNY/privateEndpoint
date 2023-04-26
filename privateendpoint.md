@@ -79,7 +79,7 @@ Sign in to the [Azure portal](https://portal.azure.com).
 
 In this section, you will create virtual network and the subnet to host the VM that is used to access your Private Link resource (a PostgreSQL Flexible server in Azure).
 
-#### Create Virtual Network
+### Create Virtual Network
 
 In this section, you will create a Virtual Network and the subnet to host the VM that is used to access your Private Link resource.
 1. On the upper-left side of the screen, select **Create a resource** > **Networking** > **Virtual network**.
@@ -97,7 +97,7 @@ In this section, you will create a Virtual Network and the subnet to host the VM
 
 3. Leave the rest as default and select *Create*.
 
-#### Create Virtual Machine
+### Create Virtual Machine
 
 1. On the upper-left side of the screen in the Azure portal, select **Create a resource** > **Compute** > **Virtual Machine**.
 2. In **Create a virtual machine - Basics**, enter or select this information:
@@ -138,7 +138,7 @@ In this section, you will create a Virtual Network and the subnet to host the VM
 7. When you see the **Validation passed** message, select **Create**.
 
 
-#### Create an Azure Database for PostgreSQL - Flexible Server
+### Create an Azure Database for PostgreSQL - Flexible Server
 In this section, you will create an Azure Database for PostgreSQL - Flexible Server in Azure.
 
 To create an Azure Database for PostgreSQL server, take the following steps:
@@ -160,7 +160,7 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 |Password|Enter a password of your choosing. The password must be at least 8 characters long and meet the defined requirements|
 |Location|Select an Azure region where you want to want your PostgreSQL Server to reside|
 |Version|Select the database version of the PostgreSQL server that is required|
-|Compute + Storage|elect the pricing tier that is needed for the server based on the workload|
+|Compute + Storage|Select the pricing tier that is needed for the server based on the workload|
 
 5. Select **Next:Networking**
 
@@ -181,11 +181,11 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 |Name|Name of Private Endpoint|
 |Target sub-resource|postgresqlServer|
 |NETWORKING|
-|Virtual Network|  Enter *MyVirtualNetwork* |
-|Subnet|Enter *mySubnet*|
+|Virtual Network|  Enter **MyVirtualNetwork**. You created this in the previous section |
+|Subnet|Enter **mySubnet**.You created this in the previous section |
 |PRIVATE DNS INTEGRATION]
-|Integrate with Private DNS Zone| Yes|
-|Private DNS Zone| Pick (New)privatelink.postgresql.database.azure.com|
+|Integrate with Private DNS Zone| **Yes**|
+|Private DNS Zone| Pick **(New)privatelink.postgresql.database.azure.com**. This will create new private DNS zone.|
 
 
 9. Select **OK**.

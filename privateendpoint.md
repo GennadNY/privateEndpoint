@@ -97,47 +97,6 @@ In this section, you will create a Virtual Network and the subnet to host the VM
 
 3. Leave the rest as default and select *Create*.
 
-### Create Virtual Machine
-
-1. On the upper-left side of the screen in the Azure portal, select **Create a resource** > **Compute** > **Virtual Machine**.
-2. In **Create a virtual machine - Basics**, enter or select this information:
-
-| **Setting** | **Value**|
-|---------|------|
-|PROJECT DETAILS |
-|Subscription| Select your subscription|
-|Resource group | Select myResourceGroup. You created this in the previous section|
-|INSTANCE DETAILS|
-|Virtual machine name| Enter *myVm* |
-|Region | Select **West Europe**|
-|Availability options| Leave the default **No infrastructure redundancy required**|
-|Image| Select **Windows Server 2019 Datacenter**|
-|Size| Leave the default **Standard DS1 v2** |
-|ADMINISTRATOR ACCOUNT|
-|Username| Enter a username of your choosing|
-|Pasword| Enter a password of your choosing. The password must be at least 12 characters long and meet the [defined complexity requirements](https://learn.microsoft.com/en-us/azure/virtual-machines/windows/faq?toc=%2Fazure%2Fvirtual-network%2Ftoc.json#what-are-the-password-requirements-when-creating-a-vm-)| 
-|Confirm Password| Reenter password|
-|INBOUND PORT RULES|
-|Public inbound port| Leave the default None|
-| SAVE MONEY|
-|Already have a Windows license?| Leave the default **No**.
-
-3. Select **Next: Disks**.
-4. In **Create a virtual machine - Disks**, leave the defaults and select **Next: Networking**.
-5. In **Create a virtual machine - Networking**, select this information:
-
-| **Setting** | **Value**|
-|---------|------|
-|Virtual network | Leave the default *MyVirtualNetwork*|
-|Address space | Leave the default **10.1.0.0/24** |
-|Subnet| Leave the default **mySubnet (10.1.0.0/24)** |
-|Public IP| Leave the default **(new) myVm-ip** |
-|Public inbound ports| Select **Allow selected ports** |
-|Select inbound ports| Select **HTTP** and **RDP**| 
-6. Select **Review + create**. You're taken to the **Review + create** page where Azure validates your configuration.
-7. When you see the **Validation passed** message, select **Create**.
-
-
 ### Create an Azure Database for PostgreSQL - Flexible Server
 In this section, you will create an Azure Database for PostgreSQL - Flexible Server in Azure.
 
@@ -192,26 +151,9 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 
 12. When you see the Validation passed message, select **Create**.
 
-### Connect to a VM using Remote Desktop (RDP)
 
-After you've created Azure virtual machine called *myVm*, connect to it from the internet as follows:
 
-1. In the portal's search bar, enter *myVm*.
-
-2. Select the **Connect** button. After selecting the Connect button, Connect to virtual machine opens.
-
-3. Select Download RDP File. Azure creates a Remote Desktop Protocol (.rdp) file and downloads it to your computer.
-
-4. Open the downloaded.rdp file.
-
-    - If prompted, select **Connect**.
-
-    - Enter the username and password you specified when creating the VM.
-5. Select OK.
-6. You may receive a certificate warning during the sign-in process. If you receive a certificate warning, select Yes or Continue.
-7. Once the VM desktop appears, minimize it to go back to your local desktop.
-
-### Access the PostgreSQL server privately from the VM
+### Access the PostgreSQL server privately from the VM on the same network
 
 1. In the Remote Desktop of *myVM*, open PowerShell.
 

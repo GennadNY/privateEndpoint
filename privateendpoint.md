@@ -75,9 +75,6 @@ Private endpoints are required to enable Private Link. This can be done using th
 
 Sign in to the [Azure portal](https://portal.azure.com).
 
-### Create an Azure VM
-
-In this section, you will create virtual network and the subnet to host the VM that is used to access your Private Link resource (a PostgreSQL Flexible server in Azure).
 
 ### Create Virtual Network
 

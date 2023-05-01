@@ -53,6 +53,9 @@ By default, network policies are disabled for a subnet in a virtual network. To 
 
 Network policies can be enabled either for Network Security Groups only, for User-Defined Routes only, or for both. For more you can see [Azure docs](https://learn.microsoft.com/azure/private-link/disable-private-endpoint-network-policy?tabs=network-policy-portal)
 
+Limitations to Network Security Groups (NSG) and Private Endpoints are listed [here](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview#limitations)
+
+
 ## Private Link combined with firewall rules
 
 The following situations and outcomes are possible when you use Private Link in combination with firewall rules:

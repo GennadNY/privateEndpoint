@@ -228,4 +228,4 @@ Address:  10.1.3.4
 ## Support
 
 
-For any questions and feedback, please reach out to FlexPEPreview@microsoft.com
+For any questions and feedback, please reach out to [FlexPEPreview@microsoft.com](mailto:flexpepreview@microsoft.com)

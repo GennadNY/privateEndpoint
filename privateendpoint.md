@@ -38,6 +38,27 @@ Azure Private Link provides the following benefits:
 
 - **Global reach: Connect privately to services running in other regions.** The consumer's virtual network could be in region A and it can connect to services behind Private Link in region B.
 
+## Use Cases for Private Link with Azure Database for PostgreSQL - Flexible Server
+
+Clients can connect to the private endpoint from the same VNet, [peered VNet](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) in same region or across regions, or via [VNet-to-VNet connection](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-vnet-vnet-resource-manager-portal) across regions. Additionally, clients can connect from on-premises using ExpressRoute, private peering, or VPN tunneling. Below is a simplified diagram showing the common use cases.
+
+<image type="content" src="./media/show-private-link-overview.png" alt-text="Diagram that shows how Azure Private Link works with Private Endpoints." />
+
+### Connecting from an Azure VM in Peered Virtual Network (VNet)
+
+Configure [VNet peering](https://learn.microsoft.com/en-us/azure/virtual-network/tutorial-connect-virtual-networks-powershell) to establish connectivity to the Azure Database for PostgreSQL - Single server from an Azure VM in a peered VNet.
+
+### Connecting from an Azure VM in VNet-to-VNet environment
+
+Configure [VNet-to-VNet VPN gateway](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-vnet-vnet-resource-manager-portal) connection to establish connectivity to a Azure Database for PostgreSQL - Flexible server from an Azure VM in a different region or subscription.
+
+
+### Connecting from an on-premises environment over VPN
+
+To establish connectivity from an on-premises environment to the Azure Database for PostgreSQL - Single server, choose and implement one of the options:
+ - [Point-to-Site Connection](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-rm-ps)
+ - [Site-to-Site VPN Connection](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-create-site-to-site-rm-powershell)
+ - [ExpressRoute Circuit](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-howto-linkvnet-portal-resource-manager)
 
 
 ## Network Security and Private Link
@@ -106,7 +127,7 @@ In this section, you will create a Virtual Network and the subnet to host the VM
 
 3. Leave the rest as default and select *Create*.
 
-### Create an Azure Database for PostgreSQL - Flexible Server
+### Create an Azure Database for PostgreSQL - Flexible Server with Private Endpoint
 In this section, you will create an Azure Database for PostgreSQL - Flexible Server in Azure.
 
 To create an Azure Database for PostgreSQL server, take the following steps:
@@ -162,6 +183,16 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 
 
 
+### Approval Process for Private Endpoint
+
+Once the network admin creates the private endpoint (PE), the PostgreSQL admin can manage the private endpoint Connection (PEC) to Azure Database for PostgreSQL. This separation of duties between the network admin and the DBA is helpful for management of the Azure Database for PostgreSQL - Flexible Server connectivity.
+1. Navigate to the Azure Database for PostgreSQL - Flexible Server resource in the Azure portal.
+    - Select Networking in the left pane
+    - Shows a list of all private endpoint Connections (PECs)
+    - Corresponding private endpoint (PE) created
+    - Select an individual PEC from the list by selecting it
+    - The PostgreSQL server admin can choose to approve or reject a PEC and optionally add a short text response
+    - After approval or rejection, the list will reflect the appropriate state along with the response text
 ### Access the PostgreSQL server privately from the VM on the same network
 
 1. In the Remote Desktop of *myVM*, open PowerShell.

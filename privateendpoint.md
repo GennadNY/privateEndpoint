@@ -38,15 +38,30 @@ Azure Private Link provides the following benefits:
 
 - **Global reach: Connect privately to services running in other regions.** The consumer's virtual network could be in region A and it can connect to services behind Private Link in region B.
 
-## Use Cases for Private Link with Azure Database for PostgreSQL - Flexible Server
+## Use Cases for Private Link with Azure Database for PostgreSQL - Flexible Server in Private Preview
 
 Clients can connect to the private endpoint from the same VNet, [peered VNet](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) in same region or across regions, or via [VNet-to-VNet connection](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-vnet-vnet-resource-manager-portal) across regions. Additionally, clients can connect from on-premises using ExpressRoute, private peering, or VPN tunneling. Below is a simplified diagram showing the common use cases.
 
 <image type="content" src="./media/show-private-link-overview.png" alt-text="Diagram that shows how Azure Private Link works with Private Endpoints." />
 
+### Limitations and Supported Features for [rivate Link Private Preview with Azure Database for PostgreSQL - Flexible Server
+
+Following are the only supported use cases for Azure Database for PostgreSQL - Flexible Server with Private Link network connectivity under Private Preview:
+
+- Creation of Flexible Server with Private Endpoint network connectivity , but without public IP available
+- Creation of Flexible Server with Private Endpoint network availability, with Public IP available
+- Connectivity from client in the same or peered VNET to the server above
+- Connectivity from VNet or on-premises via VPN 
+
+Following are features of Azure PostgreSQL Flexible Server that are not supported in Private Link Private Preview:
+- High availability
+- Disaster Recovery , either with Read-Only Replicas or Geo- redundant backup
+- Encryption at rest with Customer Managed Keys (CMK)
+- moving server across resource groups, subscriptions or Azure tenants
+
 ### Connecting from an Azure VM in Peered Virtual Network (VNet)
 
-Configure [VNet peering](https://learn.microsoft.com/en-us/azure/virtual-network/tutorial-connect-virtual-networks-powershell) to establish connectivity to the Azure Database for PostgreSQL - Single server from an Azure VM in a peered VNet.
+Configure [VNet peering](https://learn.microsoft.com/en-us/azure/virtual-network/tutorial-connect-virtual-networks-powershell) to establish connectivity to the Azure Database for PostgreSQL - Flexible server from an Azure VM in a peered VNet.
 
 ### Connecting from an Azure VM in VNet-to-VNet environment
 
@@ -55,7 +70,7 @@ Configure [VNet-to-VNet VPN gateway](https://learn.microsoft.com/en-us/azure/vpn
 
 ### Connecting from an on-premises environment over VPN
 
-To establish connectivity from an on-premises environment to the Azure Database for PostgreSQL - Single server, choose and implement one of the options:
+To establish connectivity from an on-premises environment to the Azure Database for PostgreSQL - Flexible server, choose and implement one of the options:
  - [Point-to-Site Connection](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-rm-ps)
  - [Site-to-Site VPN Connection](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-create-site-to-site-rm-powershell)
  - [ExpressRoute Circuit](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-howto-linkvnet-portal-resource-manager)
@@ -90,11 +105,11 @@ Limitations to Network Security Groups (NSG) and Private Endpoints are listed [h
 
 The following situations and outcomes are possible when you use Private Link in combination with firewall rules:
 
-* If you don't configure any firewall rules, then by default, no traffic will be able to access the Azure Database for PostgreSQL Single server.
+* If you don't configure any firewall rules, then by default, no traffic will be able to access the Azure Database for PostgreSQL Flexible server.
 
 * If you configure public traffic or a service endpoint and you create private endpoints, then different types of incoming traffic are authorized by the corresponding type of firewall rule.
 
-* If you don't configure any public traffic or service endpoint and you create private endpoints, then the Azure Database for PostgreSQL Single server is accessible only through the private endpoints. If you don't configure public traffic or a service endpoint, after all approved private endpoints are rejected or deleted, no traffic will be able to access the Azure Database for PostgreSQL Single server. 
+* If you don't configure any public traffic or service endpoint and you create private endpoints, then the Azure Database for PostgreSQL Flexible server is accessible only through the private endpoints. If you don't configure public traffic or a service endpoint, after all approved private endpoints are rejected or deleted, no traffic will be able to access the Azure Database for PostgreSQL Flexible server. 
 
 
 ## Configure Private Link for Azure Database for PostgreSQL - Flexible Server (Preview) via Portal

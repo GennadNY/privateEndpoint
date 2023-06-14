@@ -46,18 +46,23 @@ Clients can connect to the private endpoint from the same VNet, [peered VNet](ht
 
 ### Limitations and Supported Features for Private Link Private Preview with Azure Database for PostgreSQL - Flexible Server
 
-Following are the only supported use cases for Azure Database for PostgreSQL - Flexible Server with Private Link network connectivity under Private Preview:
+In the private preview of Private Endpoint for PostgreSQL flexible server, we only support single-instance, non-HA servers. Most features will work, but anything that communicates to other servers/instances we've had to redesign because we've changed the backend architecture for even better security.
 
-- Creation of Flexible Server with Private Endpoint network connectivity , but without public IP available
-- Creation of Flexible Server with Private Endpoint network availability, with Public IP available
-- Connectivity from client in the same or peered VNET to the server above
-- Connectivity from VNet or on-premises via VPN 
+Some of the features that do not work yet may be made available during private preview with normal service updates. Most (if not all) will be available with public preview in a couple of months.
 
-Following are features of Azure PostgreSQL Flexible Server that are not supported in Private Link Private Preview:
-- High availability
-- Disaster Recovery , either with Read-Only Replicas or Geo- redundant backup
-- Encryption at rest with Customer Managed Keys (CMK)
-- moving server across resource groups, subscriptions or Azure tenants
+Cross Feature Availability Matrix
+
+| **Feature**   | **Availability** | **Notes**  |
+| --------- | ------------ | --------- |
+| High Availability (HA)    | No   |    |
+| Read Replica   | No   |    |
+| Geo Read Replica   | No   |    |
+| Point in Time Restore (PITR)   | No   |    |
+| Allowing also public/internet access with firewall rules   | No   |    |
+|Major Version Upgrade (MVU)   | Yes   |  Works as designed  |
+| Azure Active Directory Authentocation (AAD Auth)   | Yes   | Works as designed   |
+| Connection pooling with PGBouncer   | Yes   |  Works as designed  |
+| Private Endpoint DNS  | Yes   |  Works as designed and [documented](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns) |
 
 ### Connecting from an Azure VM in Peered Virtual Network (VNet)
 
@@ -126,7 +131,7 @@ Sign in to the [Azure portal](https://portal.azure.com).
 
 ### Create Virtual Network
 
-In this section, you will create a Virtual Network and the subnet to host the VM that is used to access your Private Link resource.
+In this section, you will create a Virtual Network in the location\region where you will create your Private Endpoint later in the tutorial, and the subnet to host the VM that is used to access your Private Link resource.
 1. On the upper-left side of the screen, select **Create a resource** > **Networking** > **Virtual network**.
 2. In **Create virtual network**, enter or select this information:
 
@@ -136,7 +141,7 @@ In this section, you will create a Virtual Network and the subnet to host the VM
 |Address space| Enter *10.1.0.0/16*      |
 |Subscription | Select your subscription|
 |Resource group | Select **Create new**, enter *myResourceGroup*, then select **OK**.|
-|Location| Select **West Europe**.|
+|Location| Select location\region , example  **West Europe**.|
 |Subnet - Name| Enter *mySubnet*|
 |Subnet - Address range| Enter *10.1.0.0/24*|
 
@@ -162,7 +167,7 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 |Server name| Enter *myserver*. If this name is taken, create a unique name|
 |Admin username |Enter an administrator name of your choosing|
 |Password|Enter a password of your choosing. The password must be at least 8 characters long and meet the defined requirements|
-|Location|Select an Azure region where you want to want your PostgreSQL Server to reside|
+|Location|Select an Azure region where you want to want your PostgreSQL Server to reside, example  **West Europe**|
 |Version|Select the database version of the PostgreSQL server that is required|
 |Compute + Storage|Select the pricing tier that is needed for the server based on the workload|
 
@@ -178,7 +183,7 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 |---------|------|
 |Subscription| Select your subscription|
 |Resource group| Select **myResourceGroup**. You created this in the previous section|
-|Location|Select an Azure region where you want to want your Private Endpoint to reside|
+|Location|Select an Azure region where you created your VNET above, example  **West Europe**|
 |Name|Name of Private Endpoint|
 |Target sub-resource|postgresqlServer|
 |NETWORKING|
@@ -200,7 +205,8 @@ To create an Azure Database for PostgreSQL server, take the following steps:
 
 ### Approval Process for Private Endpoint
 
-Once the network admin creates the private endpoint (PE), the PostgreSQL admin can manage the private endpoint Connection (PEC) to Azure Database for PostgreSQL. This separation of duties between the network admin and the DBA is helpful for management of the Azure Database for PostgreSQL - Flexible Server connectivity.
+With separation of duties, common in many enterprises today, creation of cloud networking infrastructure, such as Azure Private Link services, are done by network administrator, whereas database servers are commonly created and managed by database administrator (DBA).
+Once the network administrator creates the private endpoint (PE), the PostgreSQL database administrator (DBA) can manage the private endpoint Connection (PEC) to Azure Database for PostgreSQL. 
 1. Navigate to the Azure Database for PostgreSQL - Flexible Server resource in the Azure portal.
     - Select Networking in the left pane
     - Shows a list of all private endpoint Connections (PECs)
@@ -232,7 +238,7 @@ Address:  10.1.3.4
 |---------|------|
 |Server type |Select PostgreSQL|
 |Server name |Select mydemopostgresserver.privatelink.postgres.database.azure.com|
-|User name |Enter username as username@servername which is provided during the PostgreSQL server creation.|
+|User name |Enter username  which is provided during the PostgreSQL Flexible server creation.|
 |Password |Enter a password provided during the PostgreSQL server creation|
 |SSL|Select Required|
 6. Select **Connect**.
